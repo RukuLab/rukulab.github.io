@@ -1,11 +1,14 @@
 {
   "name": "rukulab.github.io",
-  "version": "0.0.0",
+  "homepage": "https://rukulab.github.io",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "dev": "vocs dev",
     "build": "vocs build",
-    "preview": "vocs preview"
+    "preview": "vocs preview",
+    "predeploy": "pnpm run build",
+    "deploy": "gh-pages -d build"
   },
   "dependencies": {
     "@types/react": "latest",
@@ -14,5 +17,8 @@
     "typescript": "latest",
     "vocs": "latest"
   },
-  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771"
+  "packageManager": "pnpm@9.2.0+sha512.98a80fd11c2e7096747762304106432b3ddc67dcf54b5a8c01c93f68a2cd5e05e6821849522a06fb76284d41a2660d5e334f2ee3bbf29183bf2e739b1dafa771",
+  "devDependencies": {
+    "gh-pages": "^6.1.1"
+  }
 }
