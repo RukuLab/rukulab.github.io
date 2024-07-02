@@ -8,7 +8,7 @@
     "build": "vocs build",
     "preview": "vocs preview",
     "predeploy": "pnpm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d docs/dist"
   },
   "dependencies": {
     "@types/react": "latest",
