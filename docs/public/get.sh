@@ -40,5 +40,6 @@ else
 fi
 
 # Download and run the Ruby script
-curl -o bootstrap.rb https://raw.githubusercontent.com/RukuLab/bootstrap/main/bootstrap.rb
-ruby bootstrap.rb
+curl -o setup.rb https://raw.githubusercontent.com/RukuLab/bootstrap/main/setup.rb
+ruby setup.rb
+rm setup.rb
