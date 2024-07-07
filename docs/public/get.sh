@@ -1,33 +1,33 @@
 #!/bin/bash
 
-# Function to install Ruby on Ubuntu or Debian
-install_ruby_debian() {
+# Function to install packages on Ubuntu or Debian
+install_packages_debian() {
     sudo apt update
-    sudo apt install -y ruby-full
+    sudo apt install -y ruby-full wget
 }
 
-# Function to install Ruby on CentOS, Fedora, or RHEL
-install_ruby_redhat() {
-    sudo yum install -y ruby
+# Function to install packages on CentOS, Fedora, or RHEL
+install_packages_redhat() {
+    sudo yum install -y ruby wget
 }
 
-# Function to install Ruby on Arch Linux
-install_ruby_arch() {
-    sudo pacman -Sy ruby --noconfirm
+# Function to install packages on Arch Linux
+install_packages_arch() {
+    sudo pacman -Sy ruby wget --noconfirm
 }
 
-# Detect the Linux distribution and install Ruby
+# Detect the Linux distribution and install packages
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     case $ID in
         ubuntu|debian)
-            install_ruby_debian
+            install_packages_debian
             ;;
         centos|fedora|rhel)
-            install_ruby_redhat
+            install_packages_redhat
             ;;
         arch)
-            install_ruby_arch
+            install_packages_arch
             ;;
         *)
             echo "Unsupported distribution: $ID"
@@ -40,6 +40,6 @@ else
 fi
 
 # Download and run the Ruby script
-curl -o setup.rb https://raw.githubusercontent.com/RukuLab/bootstrap/main/setup.rb
+wget https://raw.githubusercontent.com/RukuLab/bootstrap/main/setup.rb
 ruby setup.rb
 rm setup.rb
