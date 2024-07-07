@@ -57,7 +57,7 @@ wget "$DOWNLOAD_URL"
 tar -xzf "$FILE_NAME"
 
 # Get the unzipped directory name
-UNZIPPED_DIR="${FILE_NAME%.tar.gz}"
+UNZIPPED_DIR="bootstrap-${TAG_NAME#v}"
 
 # Change to the unzipped directory
 cd "$UNZIPPED_DIR"
