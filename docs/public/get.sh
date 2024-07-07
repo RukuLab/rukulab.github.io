@@ -39,7 +39,34 @@ else
     exit 1
 fi
 
-# Download and run the Ruby script
-wget https://raw.githubusercontent.com/RukuLab/bootstrap/main/setup.rb
-ruby setup.rb
-rm setup.rb
+# Get the latest release information
+REPO="RukuLab/bootstrap"
+RELEASE_INFO=$(curl -s https://api.github.com/repos/$REPO/releases/latest)
+
+# Extract the tag name
+TAG_NAME=$(echo $RELEASE_INFO | jq -r '.tag_name')
+FILE_NAME="$TAG_NAME.tar.gz"
+
+# Construct the download URL
+DOWNLOAD_URL="https://github.com/$REPO/archive/refs/tags/$FILE_NAME"
+
+# Download the file using wget
+wget "$DOWNLOAD_URL"
+
+# Unzip the file
+tar -xzf "$FILE_NAME"
+
+# Get the unzipped directory name
+UNZIPPED_DIR="${FILE_NAME%.tar.gz}"
+
+# Change to the unzipped directory
+cd "$UNZIPPED_DIR"
+
+# Run the Ruby script
+ruby main.rb
+
+# Change back to the original directory
+cd ..
+
+# Remove the zipped file and unzipped directory
+rm -rf "$FILE_NAME" "$UNZIPPED_DIR"
