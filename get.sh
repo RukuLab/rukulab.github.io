@@ -57,18 +57,20 @@ download_and_unzip() {
     UNZIPPED_DIR="bootstrap-${TAG_NAME#v}"
 }
 
+# Function to check if the user exists and belongs to the specified groups
+user_exists_and_in_groups() {
+  id -u $PAAS_USERNAME &>/dev/null && \
+  id -Gn $PAAS_USERNAME | grep -qw www-data && \
+  id -Gn $PAAS_USERNAME | grep -qw docker
+}
+
 # Function to create a user and set up SSH keys
 create_user_and_setup_ssh() {
     sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
     sudo usermod -aG docker $PAAS_USERNAME
     head -1 ~/.ssh/authorized_keys > $TEMP_PUBKEY
     sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
-}
-
-# Function to clean up files
-cleanup() {
     sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
-    rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
 }
 
 get_latest_release_info
@@ -77,5 +79,7 @@ download_and_unzip
 # Run the Ruby script to install ruku
 ruby ~/$UNZIPPED_DIR/main.rb
 
-create_user_and_setup_ssh
-cleanup
+if ! user_exists_and_in_groups; then
+    create_user_and_setup_ssh
+fi
+rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
