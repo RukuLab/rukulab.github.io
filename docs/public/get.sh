@@ -59,9 +59,9 @@ download_and_unzip() {
 
 # Function to check if the user exists and belongs to the specified groups
 user_exists_and_in_groups() {
-  id -u $PAAS_USERNAME &>/dev/null && \
-  id -Gn $PAAS_USERNAME | grep -qw www-data && \
-  id -Gn $PAAS_USERNAME | grep -qw docker
+    id -u $PAAS_USERNAME &>/dev/null && \
+    id -Gn $PAAS_USERNAME | grep -qw www-data && \
+    id -Gn $PAAS_USERNAME | grep -qw docker
 }
 
 # Function to create a user and set up SSH keys
