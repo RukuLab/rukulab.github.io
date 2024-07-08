@@ -39,45 +39,43 @@ else
     exit 1
 fi
 
-# Get the latest release information
 REPO="RukuLab/bootstrap"
-RELEASE_INFO=$(curl -s https://api.github.com/repos/$REPO/releases/latest)
-
-# Extract the tag name
-TAG_NAME=$(echo $RELEASE_INFO | jq -r '.tag_name')
-FILE_NAME="$TAG_NAME.tar.gz"
-
-# Construct the download URL
-DOWNLOAD_URL="https://github.com/$REPO/archive/refs/tags/$FILE_NAME"
-
-# Download the file using wget
-wget "$DOWNLOAD_URL"
-
-# Unzip the file
-tar -xzf "$FILE_NAME"
-
-# Get the unzipped directory name
-UNZIPPED_DIR="bootstrap-${TAG_NAME#v}"
-
-# Change to the unzipped directory
-cd "$UNZIPPED_DIR"
-
-# Run the Ruby script
-ruby main.rb
-
 PAAS_USERNAME=ruku
 TEMP_PUBKEY=/tmp/pubkey
-# Create user
-sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
-sudo usermod -aG docker $PAAS_USERNAME
-# copy your public key to /tmp (assuming it's the first entry in authorized_keys)
-head -1 ~/.ssh/authorized_keys > /tmp/pubkey
-# install ruku and have it set up SSH keys and default files
-sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
-sudo su - $PAAS_USERNAME -c "rm -rf "$FILE_NAME" "$UNZIPPED_DIR""
 
-# Change back to the original directory
-cd ..
+# Function to get the latest release information
+get_latest_release_info() {
+    RELEASE_INFO=$(curl -s https://api.github.com/repos/$REPO/releases/latest)
+    TAG_NAME=$(echo $RELEASE_INFO | jq -r '.tag_name')
+    FILE_NAME="$TAG_NAME.tar.gz"
+    DOWNLOAD_URL="https://github.com/$REPO/archive/refs/tags/$FILE_NAME"
+}
 
-# Remove the zipped file and unzipped directory
-rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
+# Function to download and unzip the file
+download_and_unzip() {
+    wget "$DOWNLOAD_URL" && tar -xzf "$FILE_NAME"
+    UNZIPPED_DIR="bootstrap-${TAG_NAME#v}"
+}
+
+# Function to create a user and set up SSH keys
+create_user_and_setup_ssh() {
+    sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
+    sudo usermod -aG docker $PAAS_USERNAME
+    head -1 ~/.ssh/authorized_keys > $TEMP_PUBKEY
+    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
+}
+
+# Function to clean up files
+cleanup() {
+    sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
+    rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
+}
+
+get_latest_release_info
+download_and_unzip
+
+# Run the Ruby script to install ruku
+ruby ~/$UNZIPPED_DIR/main.rb
+
+create_user_and_setup_ssh
+cleanup
