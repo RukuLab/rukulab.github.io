@@ -65,6 +65,12 @@ cd "$UNZIPPED_DIR"
 # Run the Ruby script
 ruby main.rb
 
+PAAS_USERNAME=ruku
+# Create user
+sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
+# install ruku and have it set up SSH keys and default files
+sudo su - $PAAS_USERNAME -c "ruby ssh.rb"
+
 # Change back to the original directory
 cd ..
 
