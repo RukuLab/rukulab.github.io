@@ -69,10 +69,12 @@ PAAS_USERNAME=ruku
 TEMP_PUBKEY=/tmp/pubkey
 # Create user
 sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
+sudo usermod -aG docker $PAAS_USERNAME
 # copy your public key to /tmp (assuming it's the first entry in authorized_keys)
 head -1 ~/.ssh/authorized_keys > /tmp/pubkey
 # install ruku and have it set up SSH keys and default files
 sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
+sudo su - $PAAS_USERNAME -c "rm -rf "$FILE_NAME" "$UNZIPPED_DIR""
 
 # Change back to the original directory
 cd ..
