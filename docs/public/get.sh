@@ -59,11 +59,8 @@ tar -xzf "$FILE_NAME"
 # Get the unzipped directory name
 UNZIPPED_DIR="bootstrap-${TAG_NAME#v}"
 
-# Change to the unzipped directory
-cd "$UNZIPPED_DIR"
-
 # Run the Ruby script
-ruby main.rb
+ruby ~/$UNZIPPED_DIR/main.rb
 
 PAAS_USERNAME=ruku
 TEMP_PUBKEY=/tmp/pubkey
@@ -75,9 +72,6 @@ head -1 ~/.ssh/authorized_keys > /tmp/pubkey
 # install ruku and have it set up SSH keys and default files
 sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
 sudo su - $PAAS_USERNAME -c "rm -rf "$FILE_NAME" "$UNZIPPED_DIR""
-
-# Change back to the original directory
-cd ..
 
 # Remove the zipped file and unzipped directory
 rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
