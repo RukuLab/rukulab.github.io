@@ -92,7 +92,7 @@ download_and_unzip
 ruby ~/$UNZIPPED_DIR/main.rb
 
 if user_exists_and_in_groups; then
-    echo "True: User $PAAS_USERNAME already exists and belongs to both www-data and docker groups."
+    echo "User $PAAS_USERNAME already exists and belongs to both www-data and docker groups."
 else
     create_user_and_setup_ssh
 fi
