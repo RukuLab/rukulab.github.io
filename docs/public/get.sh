@@ -66,9 +66,21 @@ user_exists_and_in_groups() {
 
 # Function to create a user and set up SSH keys
 create_user_and_setup_ssh() {
+    if [ -s ~/.ssh/authorized_keys ]; then
+        AUTHORIZED_KEYS_CONTENT=$(cat ~/.ssh/authorized_keys)
+        if [ -n "$AUTHORIZED_KEYS_CONTENT" ]; then
+            head -1 ~/.ssh/authorized_keys > $TEMP_PUBKEY
+        else
+            echo "Error: ~/.ssh/authorized_keys is empty" >&2
+            exit 1
+        fi
+    else
+        echo "Error: No authorized keys found in ~/.ssh/authorized_keys" >&2
+        exit 1
+    fi
+
     sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
     sudo usermod -aG docker $PAAS_USERNAME
-    head -1 ~/.ssh/authorized_keys > $TEMP_PUBKEY
     sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
     sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
 }
