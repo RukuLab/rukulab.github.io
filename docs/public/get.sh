@@ -59,12 +59,9 @@ download_and_unzip() {
 
 # Function to check if the user exists and belongs to the specified groups
 user_exists_and_in_groups() {
-    if id "$PAAS_USERNAME" &>/dev/null; then
-        if groups "$PAAS_USERNAME" | grep -q "\bwww-data\b" && groups "$PAAS_USERNAME" | grep -q "\bdocker\b"; then
-            return 0  # True (0 in bash indicates success/true)
-        fi
-    fi
-    return 1  # False (non-zero in bash indicates failure/false)
+    id "$PAAS_USERNAME" >/dev/null 2>&1 &&
+    groups "$PAAS_USERNAME" | grep -q "\bwww-data\b" &&
+    groups "$PAAS_USERNAME" | grep -q "\bdocker\b"
 }
 
 # Function to create a user and set up SSH keys
@@ -94,7 +91,9 @@ download_and_unzip
 # Run the Ruby script to install ruku
 ruby ~/$UNZIPPED_DIR/main.rb
 
-if [ "$result" = "1" ]; then
+if user_exists_and_in_groups; then
+    echo "True: User $PAAS_USERNAME already exists and belongs to both www-data and docker groups."
+else
     create_user_and_setup_ssh
 fi
 rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUB_KEY"
