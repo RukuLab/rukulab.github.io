@@ -75,13 +75,13 @@ create_user_and_setup_ssh() {
             exit 1
         fi
     else
-        echo "Error: No authorized keys found in ~/.ssh/authorized_keys" >&2
+        echo "Error: No authorized keys found in ~/.ssh" >&2
         exit 1
     fi
 
     sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
     sudo usermod -aG docker $PAAS_USERNAME
-    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY"
+    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY && ruby ~/$UNZIPPED_DIR/setup.rb"
     sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
 }
 
