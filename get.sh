@@ -41,7 +41,7 @@ fi
 
 REPO="RukuLab/bootstrap"
 PAAS_USERNAME=ruku
-TEMP_PUBKEY=/tmp/pubkey
+TEMP_PUB_KEY=/tmp/pubkey
 
 # Function to get the latest release information
 get_latest_release_info() {
@@ -59,9 +59,12 @@ download_and_unzip() {
 
 # Function to check if the user exists and belongs to the specified groups
 user_exists_and_in_groups() {
-    id -u $PAAS_USERNAME &>/dev/null && \
-    id -Gn $PAAS_USERNAME | grep -qw www-data && \
-    id -Gn $PAAS_USERNAME | grep -qw docker
+    if id "$PAAS_USERNAME" &>/dev/null; then
+        if groups "$PAAS_USERNAME" | grep -q "\bwww-data\b" && groups "$PAAS_USERNAME" | grep -q "\bdocker\b"; then
+            return 0  # True (0 in bash indicates success/true)
+        fi
+    fi
+    return 1  # False (non-zero in bash indicates failure/false)
 }
 
 # Function to create a user and set up SSH keys
@@ -69,7 +72,7 @@ create_user_and_setup_ssh() {
     if [ -s ~/.ssh/authorized_keys ]; then
         AUTHORIZED_KEYS_CONTENT=$(cat ~/.ssh/authorized_keys)
         if [ -n "$AUTHORIZED_KEYS_CONTENT" ]; then
-            head -1 ~/.ssh/authorized_keys > $TEMP_PUBKEY
+            head -1 ~/.ssh/authorized_keys > $TEMP_PUB_KEY
         else
             echo "Error: ~/.ssh/authorized_keys is empty" >&2
             exit 1
@@ -81,7 +84,7 @@ create_user_and_setup_ssh() {
 
     sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
     sudo usermod -aG docker $PAAS_USERNAME
-    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUBKEY && ruby ~/$UNZIPPED_DIR/setup.rb"
+    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUB_KEY && ruby ~/$UNZIPPED_DIR/setup.rb"
     sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
 }
 
@@ -91,7 +94,7 @@ download_and_unzip
 # Run the Ruby script to install ruku
 ruby ~/$UNZIPPED_DIR/main.rb
 
-if ! user_exists_and_in_groups; then
+if [ $result -eq 1 ]; then
     create_user_and_setup_ssh
 fi
-rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUBKEY"
+rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUB_KEY"
