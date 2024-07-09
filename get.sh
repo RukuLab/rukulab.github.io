@@ -94,7 +94,7 @@ download_and_unzip
 # Run the Ruby script to install ruku
 ruby ~/$UNZIPPED_DIR/main.rb
 
-if [ $result -eq 1 ]; then
+if [ "$result" = "0" ]; then
     create_user_and_setup_ssh
 fi
 rm -rf "$FILE_NAME" "$UNZIPPED_DIR" "$TEMP_PUB_KEY"
