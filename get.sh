@@ -93,6 +93,8 @@ ruby ~/$UNZIPPED_DIR/main.rb
 
 if user_exists_and_in_groups; then
     echo "User $PAAS_USERNAME already exists and belongs to both www-data and docker groups."
+    sudo su - $PAAS_USERNAME -c "wget $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/setup.rb"
+    sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
 else
     create_user_and_setup_ssh
 fi
