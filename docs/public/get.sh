@@ -46,7 +46,7 @@ TEMP_PUB_KEY=/tmp/pubkey
 # Function to get the latest release information
 get_latest_release_info() {
     RELEASE_INFO=$(curl -s https://api.github.com/repos/$REPO/releases/latest)
-    TAG_NAME=$(echo $RELEASE_INFO | jq -r '.tag_name')
+    TAG_NAME=$(echo "$RELEASE_INFO" | jq -r '.tag_name')
     FILE_NAME="$TAG_NAME.tar.gz"
     DOWNLOAD_URL="https://github.com/$REPO/archive/refs/tags/$FILE_NAME"
 }
@@ -89,7 +89,7 @@ get_latest_release_info
 download_and_unzip
 
 # Run the Ruby script to install ruku
-ruby ~/$UNZIPPED_DIR/main.rb
+ruby ~/"$UNZIPPED_DIR"/main.rb
 
 if user_exists_and_in_groups; then
     echo "User $PAAS_USERNAME already exists and belongs to both www-data and docker groups."
