@@ -21,21 +21,23 @@ const InstallCommand = ({ command }: InstallCommandProps) => {
 
     return (
         <div
-            className="relative flex items-center justify-between bg-gray-800 text-white rounded-lg p-4 font-mono text-sm"
+            className="relative rounded-lg p-4 font-mono text-sm bg-zinc-700 md:w-8/12"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <code>{command}</code>
+            <div className="flex justify-center items-center h-full">
+                <code>{command}</code>
+            </div>
             {isHovered && (
                 <button
                     onClick={copyToClipboard}
-                    className="ml-2 p-2 bg-gray-700 rounded-md hover:bg-gray-600 transition-colors duration-200"
+                    className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-gray-700 rounded-md hover:bg-gray-600 hidden md:block"
                     aria-label="Copy to clipboard"
                 >
                     {isCopied ? (
-                        <Check className="w-4 h-4 text-green-400" />
+                        <Check className="w-4 h-4 text-green-400"/>
                     ) : (
-                        <Copy className="w-4 h-4" />
+                        <Copy className="w-4 h-4"/>
                     )}
                 </button>
             )}

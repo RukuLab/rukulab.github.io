@@ -3,12 +3,14 @@ layout: landing
 ---
 
 import { HomePage } from "vocs/components";
-import InstallCommand from "../components/install-command/install-command";
 
 <HomePage.Root>
-    <img src="logo.svg" alt="logo"/>
+    <img src="logo.svg" alt="logo" className="rounded-2xl" />
     <HomePage.Tagline>A Rust based tiny PaaS</HomePage.Tagline>
-    <InstallCommand command="hello" />
+    ```bash [Terminal]
+    curl https://rukulab.github.io/get.sh | sh
+    ```
+    > Run this command in your linux server to get started
     <HomePage.Description>
         Ruku allows you to do git push deployments to your own servers.
     </HomePage.Description>
