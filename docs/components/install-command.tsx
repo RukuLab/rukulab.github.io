@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Copy, Check } from 'lucide-react';
+import { Check, Copy } from "lucide-react";
+import { useState } from "react";
 
 interface InstallCommandProps {
     command: string;
@@ -15,7 +15,7 @@ const InstallCommand = ({ command }: InstallCommandProps) => {
             setIsCopied(true);
             setTimeout(() => setIsCopied(false), 2000);
         } catch (err) {
-            console.error('Failed to copy text: ', err);
+            console.error("Failed to copy text: ", err);
         }
     };
 
@@ -35,9 +35,9 @@ const InstallCommand = ({ command }: InstallCommandProps) => {
                     aria-label="Copy to clipboard"
                 >
                     {isCopied ? (
-                        <Check className="w-4 h-4 text-green-400"/>
+                        <Check className="w-4 h-4 text-green-400" />
                     ) : (
-                        <Copy className="w-4 h-4"/>
+                        <Copy className="w-4 h-4" />
                     )}
                 </button>
             )}
