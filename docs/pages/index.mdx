@@ -3,20 +3,21 @@ layout: landing
 ---
 
 import { HomePage } from "vocs/components";
+import InstallCommand from "../components/install-command/install-command";
 
 <HomePage.Root>
-  <HomePage.Logo />
-  <HomePage.Tagline>Ruku Docs</HomePage.Tagline>
-  <HomePage.InstallPackage name="vocs" type="init" />
-  <HomePage.Description>
-    This is a description of my documentation website.
-  </HomePage.Description>
-  <HomePage.Buttons>
-    <HomePage.Button href="/getting-started" variant="accent">
-      Get started
-    </HomePage.Button>
-    <HomePage.Button href="https://github.com/RukuLab/ruku">
-      GitHub
-    </HomePage.Button>
-  </HomePage.Buttons>
+    <img src="logo.svg" alt="logo"/>
+    <HomePage.Tagline>A Rust based tiny PaaS</HomePage.Tagline>
+    <InstallCommand command="hello" />
+    <HomePage.Description>
+        Ruku allows you to do git push deployments to your own servers.
+    </HomePage.Description>
+    <HomePage.Buttons>
+        <HomePage.Button href="/getting-started" variant="accent">
+            Get started
+        </HomePage.Button>
+        <HomePage.Button href="https://github.com/RukuLab/ruku">
+            GitHub
+        </HomePage.Button>
+    </HomePage.Buttons>
 </HomePage.Root>
