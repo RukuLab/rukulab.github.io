@@ -5,3 +5,12 @@
 .vocs_HomePage {
     padding-top: 0px !important;
 }
+
+.footer_license {
+    text-align: center;
+    font-size: 14px;
+}
+
+.vocs_DocsLayout_content_withSidebar .footer_license {
+    display: none;
+}
