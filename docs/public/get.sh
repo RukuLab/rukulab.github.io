@@ -81,7 +81,14 @@ create_user_and_setup_ssh() {
 
     sudo adduser --disabled-password --gecos 'PaaS access' --ingroup www-data $PAAS_USERNAME
     sudo usermod -aG docker $PAAS_USERNAME
-    sudo su - $PAAS_USERNAME -c "wget -q --show-progress $DOWNLOAD_URL && tar -xzf $FILE_NAME && ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUB_KEY && ruby ~/$UNZIPPED_DIR/setup.rb"
+
+    # Run the Ruby scripts as the new user
+    sudo su - $PAAS_USERNAME -c "
+        wget -q --show-progress $DOWNLOAD_URL && \
+        tar -xzf $FILE_NAME && \
+        ruby ~/$UNZIPPED_DIR/ssh.rb $TEMP_PUB_KEY && \
+        ruby ~/$UNZIPPED_DIR/setup.rb
+    "
     sudo su - $PAAS_USERNAME -c "rm -rf \"$FILE_NAME\" \"$UNZIPPED_DIR\""
 }
 
