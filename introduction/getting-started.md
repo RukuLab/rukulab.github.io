@@ -1,3 +1,7 @@
+---
+layout: doc
+---
+
 # Get started
 
 ## What is Ruku?

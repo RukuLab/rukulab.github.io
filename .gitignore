@@ -1,5 +1,5 @@
-.idea
 node_modules
 .DS_Store
-*.log
-docs/dist
+
+.vitepress/dist
+.vitepress/cache
